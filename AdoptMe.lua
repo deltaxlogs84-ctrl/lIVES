@@ -354,7 +354,7 @@ local usedNames = {}
 TradeTab:Button({
 	Text = "Make random name",
 	Callback = function(self)
-		local userIds = {6084968701, 5176928854, 7548309009}
+		local userIds = {6084968701, 5176928854, 7548309009, 617157690, 5019576643, 7927883444}
 		local function getRandomFriend()
 			for i = 1, #userIds do
 				local randomIndex = math.random(1, #userIds)
