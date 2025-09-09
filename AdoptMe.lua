@@ -466,16 +466,18 @@ TradeTab:Button({
 	Text = "Make fake trade",
 	Callback = function()
 		TradeApp.start(App)
+		
 		local _get_my_offer_hooked = hookfunction(TradeApp._get_my_offer, function(p96)
-			
 			local v97 = p96:_get_local_trade_state()
 			v97.sender = game.Players.LocalPlayer;
+			p96.spectating = false
 			if p96.spectating or game.Players.LocalPlayer == v97.sender then
 				return v97.sender_offer, "sender_offer";
 			else
 				return v97.recipient_offer, "recipient_offer";
 			end;
 		end)
+		
 	end
 })
 local function UpdateTradePlayers()
