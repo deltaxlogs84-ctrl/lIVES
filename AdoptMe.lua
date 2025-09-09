@@ -299,8 +299,6 @@ local function createPet(name,fly,ride,neon,meganeon, stacks)
 	end
 end
 
-
-
 local ImGui =  loadstring(game:HttpGet('https://pastebin.com/raw/3Sp2zUFP'))()
 local Window = ImGui:CreateWindow({
 	Title = "Adopt Me | ",
@@ -467,10 +465,7 @@ TradeTab:Button({
 TradeTab:Button({
 	Text = "Make fake trade",
 	Callback = function()
-		local v_u_52 = require(game.ReplicatedStorage:WaitForChild("Fsys")).load
-		local v_u_53 = v_u_52("UIManager")
-		v_u_53.set_app_visibility("TradeApp", true)
-		TradeApp.refresh_all(App)
+		TradeApp.start(App)
 	end
 })
 local function UpdateTradePlayers()
