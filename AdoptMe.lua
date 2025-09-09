@@ -227,6 +227,14 @@ old_refresh_all = hookfunction(TradeApp.refresh_all, function(app, ...)
 	UpdateNamesTradeApp()
 	return result
 end)
+
+local App = nil
+AppHook = hookfunction(TradeApp.start, function(ArgApp)
+	App = ArgApp
+	print("TradeApp.start Called!")
+	return AppHook(ArgApp)
+end)
+
 getgenv().UsedAges = getgenv().UsedAges or {}
 local function getUniqueRandomAge()
 	local age
@@ -452,6 +460,15 @@ TradeTab:Button({
 		for _, Player in pairs(game:GetService("Players"):GetPlayers()) do
 			SendTradeRequest:FireServer(Player)
 		end
+	end
+})
+TradeTab:Button({
+	Text = "Make fake trade",
+	Callback = function()
+		local v_u_52 = require(game.ReplicatedStorage:WaitForChild("Fsys")).load
+		local v_u_53 = v_u_52("UIManager")
+		v_u_53.set_app_visibility("TradeApp", true)
+		TradeApp.refresh_all(App)
 	end
 })
 local function UpdateTradePlayers()
