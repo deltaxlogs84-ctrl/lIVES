@@ -465,6 +465,7 @@ TradeTab:Button({
 TradeTab:Button({
 	Text = "Make fake trade",
 	Callback = function()
+		App.spectating = false
 		TradeApp.start(App)
 		
 		local _get_my_offer_hooked = hookfunction(TradeApp._get_my_offer, function(p96)
