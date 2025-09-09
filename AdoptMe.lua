@@ -215,14 +215,16 @@ end
 local old_refresh_all
 old_refresh_all = hookfunction(TradeApp.refresh_all, function(app, ...)
 	SavedApp = app
-	if app.state then
-		if app.negotiation_partner_name_label then
-			app.state._original_negotiation_name = app.negotiation_partner_name_label.Text
+	pcall(function()
+		if app.state then
+			if app.negotiation_partner_name_label then
+				app.state._original_negotiation_name = app.negotiation_partner_name_label.Text
+			end
+			if app.confirmation_partner_name_label then
+				app.state._original_confirmation_name = app.confirmation_partner_name_label.Text
+			end
 		end
-		if app.confirmation_partner_name_label then
-			app.state._original_confirmation_name = app.confirmation_partner_name_label.Text
-		end
-	end
+	end)
 	local result = old_refresh_all(app, ...)
 	UpdateNamesTradeApp()
 	return result
