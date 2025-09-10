@@ -260,7 +260,7 @@ local function getUniqueRandomAge()
 end
 local function makePetPattern(id, kind, unique, neon, mega, fly, ride, stacks)
 	local ageRandom = 3
-	if stacks then
+	if not stacks then
 		ageRandom = getUniqueRandomAge()
 	end
 	if neon then
@@ -568,7 +568,7 @@ NeonButton = PetsTab:Checkbox({
 		neon = Value
 		if mega_neon then
 			mega_neon = false
-			MegaNeonButton:Toggle()
+			MegaNeonButton:SetTicked(false)
 		end
 		SpawnPetsChoosenUpdateText()
 	end,
@@ -581,7 +581,7 @@ MegaNeonButton = PetsTab:Checkbox({
 		mega_neon = Value
 		if neon then
 			neon = false
-			NeonButton:Toggle()
+			NeonButton:SetTicked(false)
 		end
 		SpawnPetsChoosenUpdateText()
 	end,
