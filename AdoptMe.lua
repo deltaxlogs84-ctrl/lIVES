@@ -536,7 +536,7 @@ local SpawnPetsChoosenUpdateText = function()
 			table.insert(selectedPets, "R") -- Ride
 		end
 		local text = "Spawn pets - " .. table.concat(selectedPets, "")
-		SpawnPetsChoosen:SetLabel(text)
+		SpawnPetsChoosen.Text = text
 	end)
 end
 
@@ -568,7 +568,7 @@ NeonButton = PetsTab:Checkbox({
 		neon = Value
 		if mega_neon then
 			mega_neon = false
-			MegaNeonButton.Value = false
+			MegaNeonButton:Toggle()
 		end
 		SpawnPetsChoosenUpdateText()
 	end,
@@ -581,7 +581,7 @@ MegaNeonButton = PetsTab:Checkbox({
 		mega_neon = Value
 		if neon then
 			neon = false
-			NeonButton.Value = false
+			NeonButton:Toggle()
 		end
 		SpawnPetsChoosenUpdateText()
 	end,
