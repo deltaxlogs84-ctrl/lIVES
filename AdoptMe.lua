@@ -334,7 +334,8 @@ local AdoptMeHelper = {
 			flyable = false,
 			rideable = false,
 			neon = false,
-			mega_neon = false
+			mega_neon = false,
+			stack = false
 		}
 	}
 }
@@ -516,41 +517,85 @@ local rideable = AdoptMeHelper.Inv.Pets.rideable
 local mega_neon = AdoptMeHelper.Inv.Pets.mega_neon
 local neon = AdoptMeHelper.Inv.Pets.neon
 
+local stack = AdoptMeHelper.Inv.Pets.stack
+
+local SpawnPetsChoosen
+
+local SpawnPetsChoosenUpdateText = function()
+	local selectedPets = {}
+	if mega_neon then
+		table.insert(selectedPets, "M")
+	elseif neon then
+		table.insert(selectedPets, "N")
+	end
+	if flyable then
+		table.insert(selectedPets, "F")
+	end
+	if rideable then
+		table.insert(selectedPets, "R")
+	end
+	local text = "Spawn pets - " .. table.concat(selectedPets, "")
+	SpawnPetsChoosen.Text = text
+end
+
 PetsTab:Checkbox({
 	Label = "Fly",
-	Value = true,
+	Value = false,
 	Callback = function(self, Value)
 		flyable = Value
+		SpawnPetsChoosenUpdateText()
 	end,
 })
 PetsTab:Checkbox({
 	Label = "Ride",
-	Value = true,
+	Value = false,
 	Callback = function(self, Value)
 		rideable = Value
+		SpawnPetsChoosenUpdateText()
 	end,
 })
-PetsTab:Checkbox({
+local MegaNeonButton
+local NeonButton
+
+NeonButton = PetsTab:Checkbox({
 	Label = "Neon",
-	Value = true,
+	Value = false,
 	Callback = function(self, Value)
 		neon = Value
-	end,
-})
-PetsTab:Checkbox({
-	Label = "Mega Neon",
-	Value = true,
-	Callback = function(self, Value)
-		mega_neon = Value
+		if mega_neon then
+			mega_neon = false
+			MegaNeonButton.Value = false
+		end
+		SpawnPetsChoosenUpdateText()
 	end,
 })
 
-PetsTab:Button({
-	Text = "Spawn pets",
+MegaNeonButton = PetsTab:Checkbox({
+	Label = "Mega Neon",
+	Value = false,
+	Callback = function(self, Value)
+		mega_neon = Value
+		if neon then
+			neon = false
+			NeonButton.Value = false
+		end
+		SpawnPetsChoosenUpdateText()
+	end,
+})
+PetsTab:Checkbox({
+	Label = "Stack",
+	Value = false,
+	Callback = function(self, Value)
+		stack = Value
+	end,
+})
+
+SpawnPetsChoosen = PetsTab:Button({
+	Text = "Spawn pets - ",
 	Callback = function(self)
 		for _,namepet in pairs(petstbl) do
 			for i = 1,math.random(1,2) do
-				createPet(namepet,flyable,rideable,neon,mega_neon,true)
+				createPet(namepet,flyable,rideable,neon,mega_neon,stack)
 			end
 		end
 	end,
@@ -560,7 +605,7 @@ PetsTab:Button({
 	Callback = function(self)
 		for _,namepet in pairs(petstbl) do
 			for i = 1,math.random(1,2) do
-				createPet(namepet,true,true,false,false,true)
+				createPet(namepet,true,true,false,false,stack)
 			end
 		end
 	end,
@@ -570,7 +615,7 @@ PetsTab:Button({
 	Callback = function(self)
 		for _,namepet in pairs(petstbl) do
 			for i = 1,math.random(1,2) do
-				createPet(namepet,true,true,true,false,true)
+				createPet(namepet,true,true,true,false,stack)
 			end
 		end
 	end,
@@ -580,7 +625,7 @@ PetsTab:Button({
 	Callback = function(self)
 		for _,namepet in pairs(petstbl) do
 			for i = 1,math.random(1,2) do
-				createPet(namepet,true,true,false,true,true)
+				createPet(namepet,true,true,false,true,stack)
 			end
 		end
 	end,
