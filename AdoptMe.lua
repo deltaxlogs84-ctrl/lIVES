@@ -486,9 +486,7 @@ TradeTab:Button({
 TradeTab:Button({
 	Text = "Make fake trade",
 	Callback = function()
-		App.spectating = false
 		TradeApp.start(App)
-		
 	end
 })
 local function UpdateTradePlayers()
@@ -516,74 +514,34 @@ local flyable = AdoptMeHelper.Inv.Pets.flyable
 local rideable = AdoptMeHelper.Inv.Pets.rideable
 local mega_neon = AdoptMeHelper.Inv.Pets.mega_neon
 local neon = AdoptMeHelper.Inv.Pets.neon
-
 local stack = AdoptMeHelper.Inv.Pets.stack
-
-local SpawnPetsChoosen
-
-local SpawnPetsChoosenUpdateText = function()
-	pcall(function()
-		local selectedPets = {}
-		if mega_neon then
-			table.insert(selectedPets, "M") -- Mega Neon
-		elseif neon then
-			table.insert(selectedPets, "N") -- Neon
-		end
-		if flyable then
-			table.insert(selectedPets, "F") -- Fly
-		end
-		if rideable then
-			table.insert(selectedPets, "R") -- Ride
-		end
-		local text = "Spawn pets - " .. table.concat(selectedPets, "")
-		SpawnPetsChoosen.Text = text
-	end)
-end
 
 PetsTab:Checkbox({
 	Label = "Fly",
 	Value = flyable,
 	Callback = function(self, Value)
 		flyable = Value
-		SpawnPetsChoosenUpdateText()
 	end,
 })
-
 PetsTab:Checkbox({
 	Label = "Ride",
 	Value = rideable,
 	Callback = function(self, Value)
 		rideable = Value
-		SpawnPetsChoosenUpdateText()
 	end,
 })
-
-local MegaNeonButton
-local NeonButton
-
-NeonButton = PetsTab:Checkbox({
+PetsTab:Checkbox({
 	Label = "Neon",
 	Value = neon,
 	Callback = function(self, Value)
 		neon = Value
-		if mega_neon then
-			mega_neon = false
-			MegaNeonButton:SetTicked(false)
-		end
-		SpawnPetsChoosenUpdateText()
 	end,
 })
-
-MegaNeonButton = PetsTab:Checkbox({
+PetsTab:Checkbox({
 	Label = "Mega Neon",
 	Value = mega_neon,
 	Callback = function(self, Value)
 		mega_neon = Value
-		if neon then
-			neon = false
-			NeonButton:SetTicked(false)
-		end
-		SpawnPetsChoosenUpdateText()
 	end,
 })
 
@@ -594,9 +552,8 @@ PetsTab:Checkbox({
 		stack = Value
 	end,
 })
-
-SpawnPetsChoosen = PetsTab:Button({
-	Text = "Spawn pets - ",
+PetsTab:Button({
+	Text = "Spawn pets",
 	Callback = function(self)
 		for _,namepet in pairs(petstbl) do
 			for i = 1, math.random(1, 2) do
