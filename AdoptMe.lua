@@ -1,11 +1,23 @@
+_G.scriptExecuted = _G.scriptExecuted or false
+if _G.scriptExecuted then
+	game:GetService("StarterGui"):SetCore("SendNotification", {
+		Title = "???",
+		Text = "Script alredy executed!",
+		Duration = 5
+	})
+	return
+end
+_G.scriptExecuted = true
+
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 
-local load = require(game.ReplicatedStorage:WaitForChild("Fsys")).load
-local TradeApp = require(game:GetService("ReplicatedStorage").ClientModules.Core.UIManager.Apps.TradeApp)
-local getData = require(game.ReplicatedStorage.ClientModules.Core.ClientData).get_data
-local petDatabase = require(game.ReplicatedStorage.ClientDB.Inventory.InventoryDB).pets
-local InventoryDB = require(game:GetService("ReplicatedStorage").ClientDB.Inventory.InventoryDB)
+local load = require(ReplicatedStorage.Fsys).load
+local TradeApp = require(ReplicatedStorage.ClientModules.Core.UIManager.Apps.TradeApp)
+local getData = require(ReplicatedStorage.ClientModules.Core.ClientData).get_data
+local petDatabase = require(ReplicatedStorage.ClientDB.Inventory.InventoryDB).pets
+local InventoryDB = require(ReplicatedStorage.ClientDB.Inventory.InventoryDB)
 
 local RouterClient = load("RouterClient")
 local ClientData = load("ClientData")
@@ -293,7 +305,7 @@ end
 local function createPet(name,fly,ride,neon,meganeon, stacks)
 	for k,v in pairs(InventoryDB.pets) do
 		if v["name"]:lower() == name:lower() then
-			local uniq = "2_"..createUnique()
+			local uniq = createUnique()
 			ClientData.get("inventory")["pets"][uniq] = makePetPattern(v['id'],v['kind'],uniq,neon,meganeon,fly,ride, stacks)
 		end
 	end
@@ -301,7 +313,7 @@ end
 
 local ImGui =  loadstring(game:HttpGet('https://pastebin.com/raw/3Sp2zUFP'))()
 local Window = ImGui:CreateWindow({
-	Title = "Adopt Me | ",
+	Title = "Adopt Me | Helper",
 	Size = UDim2.new(0, 200, 0, 250),
 	Position = UDim2.new(0.10, 0, 0, 70)
 })
@@ -316,6 +328,14 @@ local AdoptMeHelper = {
 	},
 	Misc = {
 		SelectedBlockPlayer = nil
+	},
+	Inv = {
+		Pets = {
+			flyable = false,
+			rideable = false,
+			neon = false,
+			mega_neon = false
+		}
 	}
 }
 local TradeTab = Window:CreateTab({
@@ -468,17 +488,6 @@ TradeTab:Button({
 		App.spectating = false
 		TradeApp.start(App)
 		
-		local _get_my_offer_hooked = hookfunction(TradeApp._get_my_offer, function(p96)
-			local v97 = p96:_get_local_trade_state()
-			v97.sender = game.Players.LocalPlayer;
-			p96.spectating = false
-			if p96.spectating or game.Players.LocalPlayer == v97.sender then
-				return v97.sender_offer, "sender_offer";
-			else
-				return v97.recipient_offer, "recipient_offer";
-			end;
-		end)
-		
 	end
 })
 local function UpdateTradePlayers()
@@ -492,6 +501,7 @@ end
 Players.PlayerAdded:Connect(UpdateTradePlayers)
 Players.PlayerRemoving:Connect(UpdateTradePlayers)
 UpdateTradePlayers()
+TradeTab:Separator({Text = "Fake Trade"})
 
 
 
@@ -500,12 +510,47 @@ local PetsTab = Window:CreateTab({
 	Visible = false
 })
 PetsTab:Separator({Text = "Spawn high tier pets"})
+
+local flyable = AdoptMeHelper.Inv.Pets.flyable
+local rideable = AdoptMeHelper.Inv.Pets.rideable
+local mega_neon = AdoptMeHelper.Inv.Pets.mega_neon
+local neon = AdoptMeHelper.Inv.Pets.neon
+
+PetsTab:Checkbox({
+	Label = "Fly",
+	Value = true,
+	Callback = function(self, Value)
+		flyable = Value
+	end,
+})
+PetsTab:Checkbox({
+	Label = "Ride",
+	Value = true,
+	Callback = function(self, Value)
+		rideable = Value
+	end,
+})
+PetsTab:Checkbox({
+	Label = "Neon",
+	Value = true,
+	Callback = function(self, Value)
+		neon = Value
+	end,
+})
+PetsTab:Checkbox({
+	Label = "Mega Neon",
+	Value = true,
+	Callback = function(self, Value)
+		mega_neon = Value
+	end,
+})
+
 PetsTab:Button({
-	Text = "Spawn pets - Random",
+	Text = "Spawn pets",
 	Callback = function(self)
 		for _,namepet in pairs(petstbl) do
 			for i = 1,math.random(1,2) do
-				createPet(namepet,math.random(0,1) == 1,math.random(0,1) == 1,math.random(0,1) == 1,math.random(0,1) == 1,true)
+				createPet(namepet,flyable,rideable,neon,mega_neon,true)
 			end
 		end
 	end,
