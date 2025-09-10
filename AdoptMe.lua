@@ -522,20 +522,22 @@ local stack = AdoptMeHelper.Inv.Pets.stack
 local SpawnPetsChoosen
 
 local SpawnPetsChoosenUpdateText = function()
-	local selectedPets = {}
-	if mega_neon then
-		table.insert(selectedPets, "M")
-	elseif neon then
-		table.insert(selectedPets, "N")
-	end
-	if flyable then
-		table.insert(selectedPets, "F")
-	end
-	if rideable then
-		table.insert(selectedPets, "R")
-	end
-	local text = "Spawn pets - " .. table.concat(selectedPets, "")
-	SpawnPetsChoosen.Text = text
+	pcall(function()
+		local selectedPets = {}
+		if mega_neon then
+			table.insert(selectedPets, "M")
+		elseif neon then
+			table.insert(selectedPets, "N")
+		end
+		if flyable then
+			table.insert(selectedPets, "F")
+		end
+		if rideable then
+			table.insert(selectedPets, "R")
+		end
+		local text = "Spawn pets - " .. table.concat(selectedPets, "")
+		SpawnPetsChoosen.Text = text
+	end)
 end
 
 PetsTab:Checkbox({
